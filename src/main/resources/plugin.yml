@@ -1,0 +1,18 @@
+name: SusAC
+version: 2.0
+description: SusAC+ - suspicious player / cheat detection and flag menu
+main: me.fix.susac.SusAC
+api-version: "1.21"
+commands:
+  sus:
+    description: Open the suspicious players flag menu
+    usage: /sus [player|top|clear|tp|alerts|test|reload]
+permissions:
+  sus.use:
+    default: op
+  sus.admin:
+    default: op
+  sus.alerts:
+    default: op
+  sus.bypass:
+    default: false

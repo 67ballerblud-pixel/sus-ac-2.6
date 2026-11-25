@@ -1,0 +1,208 @@
+# SusAC+ config. Raise numbers to reduce false flags, lower them to be stricter.
+# SusAC+ only ALERTS staff - it never punishes anyone by itself.
+
+# When one player trips this many DIFFERENT detections inside the window, staff get one loud
+# "likely cheat client" alert. This is the main defence against humanized cheat clients.
+combo:
+  enabled: true
+  distinct-checks: 3
+  window-seconds: 120
+alerts:
+  enabled: true        # false = nobody gets chat alerts (flags are still saved)
+  console-log: true    # false = stop flags printing in the console
+alert-cooldown-seconds: 3
+teleport-grace-ms: 2000
+
+checks:
+  speed:
+    enabled: true
+    max-per-tick: 0.65   # hard cap (blocks per tick). Ground/air physics checks run on top of this
+    buffer: 6
+  fly:
+    enabled: true
+    hover-ticks: 10      # ticks hovering in mid-air
+  omnisprint:
+    enabled: true
+    ticks: 10
+  reach:
+    enabled: true
+    max: 3.35            # vanilla is 3.0. Measured against the target's recent positions, so lag is already handled
+    buffer: 3
+  autoclicker:
+    enabled: true
+    max-cps: 22
+    steady-range: 1      # 8 seconds in a row of 8+ CPS that never varies by more than this = autoclicker
+  wallhit:
+    enabled: true
+    buffer: 5
+  multiaura:
+    enabled: true
+  nuker:
+    enabled: true
+    max-per-second: 12
+  breakreach:
+    enabled: true
+    max: 5.8
+  fastplace:
+    enabled: true
+    max-per-second: 16
+  fasteat:
+    enabled: true
+    min-interval-ms: 600
+
+  # ---- SusAC+ detections (built from analysing the Anubis cheat client) ----
+  timer:
+    enabled: true
+    threshold-ms: 150    # how far ahead of the server clock a client may run (also catches ClickTP / Blink)
+  step:
+    enabled: true
+  nofall:
+    enabled: true
+    min-fall: 8          # blocks fallen before "no damage taken" counts
+  jesus:
+    enabled: true
+  noslow:
+    enabled: true
+  invmove:
+    enabled: true
+  invaction:
+    enabled: true        # attacking with a chest/menu open
+  airstuck:
+    enabled: true
+  elytra:
+    enabled: true
+    max-horizontal: 2.8  # blocks/tick while gliding
+  fakelag:
+    enabled: true
+    stalls: 6            # packet hold+release cycles in 20s while fighting
+    max-ping: 150
+  vehicle:
+    enabled: true
+    max-boat: 0.9
+    max-mount: 1.1
+  boatfly:
+    enabled: true
+  entitycontrol:
+    enabled: true        # driving a pig/horse/camel/strider without a saddle
+  silentaim:
+    enabled: true        # view snaps away and back around an attack/place (silent rotations)
+    min-angle: 30
+    count: 3
+  aimassist:
+    enabled: true
+    max-variation: 0.2
+  hitray:
+    enabled: true
+    margin: 0.35
+    buffer: 4
+  noswing:
+    enabled: true
+  crystalaura:
+    enabled: true
+    min-reaction-ms: 60  # on top of the player's ping
+    max-per-second: 10
+  anchormacro:
+    enabled: true
+    min-sequence-ms: 250 # place + charge + detonate an anchor
+  autototem:
+    enabled: true
+    min-reaction-ms: 90  # offhand refill speed after a pop (ping already subtracted)
+    max-deviation-ms: 20
+  autoswitch:
+    enabled: true
+    count: 5
+  velocity:
+    enabled: true        # ignoring / delaying upward knockback
+    buffer: 4
+  placeray:
+    enabled: true
+    margin: 0.6
+  fastuse:
+    enabled: true
+    max-per-second: 16
+  invspam:
+    enabled: true
+    max-per-second: 25
+  menumacro:
+    enabled: true        # bots clicking menus (auto sell / AH sniper) with machine-like rhythm
+    samples: 40
+    max-deviation-ms: 35
+  clientbrand:
+    enabled: true
+    log-brands: false    # true = print every player's client brand in console (useful to learn what your players run)
+    blacklist: [anubis, wurst, meteor, impact, aristois, liquidbounce, future, rusherhack, sigma, vape, salhack, kami, phobos, konas, thunderhack, novoline, tenacity, astolfo]
+  cheatclientad:
+    enabled: true
+
+  # ---- earlier checks ----
+  xray:
+    enabled: true
+    window: 150          # mined filler/ore blocks looked at (below Y20 or Nether)
+    rare-ores: 8         # diamond/ancient debris in that window = flag
+    path-efficiency: 0.45 # XRayPath: digging this straight between hidden ores
+    path-hits: 4
+  macroclick:
+    enabled: true
+    max-deviation-ms: 8  # click timing that is TOO consistent
+  autowalk:
+    enabled: true
+    seconds: 90          # walking this long with a frozen camera
+  walltrack:
+    enabled: true
+    range: 40
+    samples: 12          # 12 samples = ~3 seconds of tracking
+  altlimit:
+    enabled: true
+    max-accounts: 2      # on the same IP (turn off if behind a proxy)
+  chatflood:
+    enabled: true
+    max-messages: 5
+    window-ms: 5000
+  chatspam:
+    enabled: true
+    repeats: 3
+  chatcaps:
+    enabled: true
+    min-letters: 10
+    ratio: 0.7
+  advertising:
+    enabled: true
+  doxing:
+    enabled: true
+  deaththreat:
+    enabled: true
+  hatespeech:
+    enabled: true
+  profanity:
+    enabled: true
+
+chat:
+  # Text known to come from cheat clients (spaces/punctuation are ignored when matching)
+  cheat-client-signatures:
+    - "anubis was here"
+    - "discord.gg/anubis"
+    - "anubis client"
+  # Print chat to the console when another plugin (UltimateDonutSmp) cancels it and sends it itself.
+  # Muted/filtered messages are cancelled too, so they also show up here.
+  console-log: true
+  # Domains/IPs that are allowed in chat (your own server address, etc.)
+  advertising-whitelist: []
+  # Phrases are matched as whole words after leet-speak cleanup (1->i, 3->e, 0->o...)
+  threat-phrases:
+    - "kill yourself"
+    - "kys"
+    - "i will find you"
+    - "i will kill you"
+    - "hope you die"
+  # Add your own words here, one per line
+  hate-words: []
+  profanity-words:
+    - "fuck"
+    - "shit"
+    - "bitch"
+
+# /sus test <player>: takes the totem out of their hand and times how fast one is put back.
+# It only reports to you - it never flags anyone. Needs a spare totem in their inventory.
+test:
+  window-ticks: 20       # how long to watch (20 ticks = 1 second)
+  suspicious-ms: 250     # refills faster than this (ping removed) get called suspicious
